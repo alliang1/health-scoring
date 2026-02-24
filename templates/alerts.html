@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Alerts - Nexus Customer Health{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Alerts</h2>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="summary-card summary-card-danger bg-light rounded">
+            <div class="text-muted">Customers at Risk</div>
+            <h3>{{ alerts|length }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="summary-card summary-card-warning bg-light rounded">
+            <div class="text-muted">ARR at Risk</div>
+            <h3>${{ "{:,.0f}".format(total_arr_at_risk) }}</h3>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="summary-card summary-card-info bg-light rounded">
+            <div class="text-muted">Lowest Score</div>
+            {% if alerts %}
+            <h3>{{ alerts[0].health_score.score }} - {{ alerts[0].account_name }}</h3>
+            {% else %}
+            <h3>-</h3>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if alerts %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Health</th>
+            <th>Customer</th>
+            <th>ARR at Risk</th>
+            <th>Signals</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alert in alerts %}
+        <tr onclick="window.location='{{ url_for('customer_detail', account_id=alert.account_id) }}'" style="cursor: pointer;">
+            <td>
+                {% if alert.health_score.category == 'critical' %}
+                <span class="badge badge-critical">{{ alert.health_score.score }} Critical</span>
+                {% else %}
+                <span class="badge badge-at-risk">{{ alert.health_score.score }} At Risk</span>
+                {% endif %}
+            </td>
+            <td><strong>{{ alert.account_name }}</strong></td>
+            <td>${{ "{:,.0f}".format(alert.arr) }}</td>
+            <td>
+                {% for signal in alert.health_score.signals %}
+                    {% if signal.severity == 'critical' %}
+                    <span class="badge bg-danger">{{ signal.description }}</span>
+                    {% elif signal.severity == 'warning' %}
+                    <span class="badge bg-warning text-dark">{{ signal.description }}</span>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-success">
+    No at-risk customers.
+</div>
+{% endif %}
+{% endblock %}

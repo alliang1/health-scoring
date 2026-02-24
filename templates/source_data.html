@@ -1,0 +1,182 @@
+{% extends "base.html" %}
+{% block title %}Source Data - Nexus Customer Health{% endblock %}
+
+{% block content %}
+<h2>Source Data</h2>
+<p class="text-muted">Raw data from both systems. DataFlow is the enterprise CRM; QuickSync is the SMB product.</p>
+
+<ul class="nav nav-tabs mb-3" id="sourceTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button">
+            Accounts <span class="badge bg-secondary">{{ accounts|length }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="contacts-tab" data-bs-toggle="tab" data-bs-target="#contacts" type="button">
+            Contacts <span class="badge bg-secondary">{{ contacts|length }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="opportunities-tab" data-bs-toggle="tab" data-bs-target="#opportunities" type="button">
+            Opportunities <span class="badge bg-secondary">{{ opportunities|length }}</span>
+        </button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="companies-tab" data-bs-toggle="tab" data-bs-target="#companies" type="button">
+            Companies <span class="badge bg-secondary">{{ companies|length }}</span>
+        </button>
+    </li>
+</ul>
+
+<div class="tab-content" id="sourceTabContent">
+
+    <!-- DataFlow: Accounts -->
+    <div class="tab-pane fade show active" id="accounts" role="tabpanel">
+        <p class="text-muted small mb-2">Source: DataFlow</p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                        <th>industry</th>
+                        <th>annual_revenue</th>
+                        <th>employees</th>
+                        <th>status</th>
+                        <th>contract_value</th>
+                        <th>contract_start</th>
+                        <th>contract_end</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in accounts %}
+                    <tr>
+                        <td><code>{{ a.id }}</code></td>
+                        <td>{{ a.name }}</td>
+                        <td>{{ a.industry }}</td>
+                        <td>{{ "${:,}".format(a.annual_revenue) }}</td>
+                        <td>{{ a.employees }}</td>
+                        <td><span class="badge {{ 'bg-success' if a.status == 'customer' else 'bg-info' }}">{{ a.status }}</span></td>
+                        <td>{{ "${:,}".format(a.contract_value) if a.contract_value else '' }}</td>
+                        <td>{{ a.contract_start if a.contract_start else '' }}</td>
+                        <td>{{ a.contract_end if a.contract_end else '' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DataFlow: Contacts -->
+    <div class="tab-pane fade" id="contacts" role="tabpanel">
+        <p class="text-muted small mb-2">Source: DataFlow</p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>account_id</th>
+                        <th>first_name</th>
+                        <th>last_name</th>
+                        <th>title</th>
+                        <th>email</th>
+                        <th>phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in contacts %}
+                    <tr>
+                        <td><code>{{ c.id }}</code></td>
+                        <td><code>{{ c.account_id }}</code></td>
+                        <td>{{ c.first_name }}</td>
+                        <td>{{ c.last_name }}</td>
+                        <td>{{ c.title }}</td>
+                        <td>{{ c.email }}</td>
+                        <td>{{ c.phone }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DataFlow: Opportunities -->
+    <div class="tab-pane fade" id="opportunities" role="tabpanel">
+        <p class="text-muted small mb-2">Source: DataFlow</p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>account_id</th>
+                        <th>name</th>
+                        <th>amount</th>
+                        <th>stage</th>
+                        <th>close_date</th>
+                        <th>product</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for o in opportunities %}
+                    <tr>
+                        <td><code>{{ o.id }}</code></td>
+                        <td><code>{{ o.account_id }}</code></td>
+                        <td>{{ o.name }}</td>
+                        <td>{{ "${:,}".format(o.amount) }}</td>
+                        <td>
+                            <span class="badge {{ 'bg-success' if o.stage == 'closed_won' else 'bg-danger' if o.stage == 'closed_lost' else 'bg-primary' }}">
+                                {{ o.stage }}
+                            </span>
+                        </td>
+                        <td>{{ o.close_date }}</td>
+                        <td>{{ o.product }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- QuickSync: Companies -->
+    <div class="tab-pane fade" id="companies" role="tabpanel">
+        <p class="text-muted small mb-2">Source: QuickSync</p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>id</th>
+                        <th>company_name</th>
+                        <th>contact_name</th>
+                        <th>contact_email</th>
+                        <th>plan</th>
+                        <th>mrr</th>
+                        <th>billing_cycle</th>
+                        <th>signup_date</th>
+                        <th>renewal_date</th>
+                        <th>usage_gb</th>
+                        <th>users</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in companies %}
+                    <tr>
+                        <td><code>{{ c.id }}</code></td>
+                        <td>{{ c.company_name }}</td>
+                        <td>{{ c.contact_name }}</td>
+                        <td>{{ c.contact_email }}</td>
+                        <td><span class="badge bg-secondary">{{ c.plan }}</span></td>
+                        <td>{{ "${:,}".format(c.mrr) }}</td>
+                        <td>{{ c.billing_cycle }}</td>
+                        <td>{{ c.signup_date }}</td>
+                        <td>{{ c.renewal_date }}</td>
+                        <td>{{ c.usage_gb }}</td>
+                        <td>{{ c.users }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

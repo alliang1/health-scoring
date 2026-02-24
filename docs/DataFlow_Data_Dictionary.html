@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Cloud - DataFlow Data Dictionary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: #1a202c;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .sidebar-header p {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-section {
+            padding: 1rem 0;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #718096;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: #4a5568;
+            border-left-color: #4299e1;
+        }
+
+        .sidebar-nav a.active {
+            background: #4a5568;
+            border-left-color: #4299e1;
+        }
+
+        .table-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: #4299e1;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.7rem;
+            line-height: 18px;
+            color: #fff;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem 3rem;
+            max-width: 1000px;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header .description {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        .model-section {
+            display: none;
+        }
+
+        .model-section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .col-name {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #2d3748;
+        }
+
+        .col-type {
+            font-size: 0.8rem;
+            color: #718096;
+            background: #edf2f7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .col-description {
+            color: #4a5568;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .badge-pk {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .badge-fk {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .badge-optional {
+            background: #fefcbf;
+            color: #975a16;
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+
+        .valid-values {
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .valid-values code {
+            background: #edf2f7;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            margin-right: 0.25rem;
+            color: #4a5568;
+        }
+
+        .entity-owner {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+
+        .entity-owner strong {
+            color: #4a5568;
+        }
+
+        /* Relationships */
+        .relationship {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .relationship:last-child {
+            border-bottom: none;
+        }
+
+        .relationship-arrow {
+            color: #a0aec0;
+            margin: 0 0.75rem;
+        }
+
+        .relationship-table {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #4299e1;
+            text-decoration: none;
+        }
+
+        .relationship-table:hover {
+            text-decoration: underline;
+        }
+
+        .relationship-type {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-left: auto;
+        }
+
+        /* Sample records */
+        .sample-data {
+            overflow-x: auto;
+        }
+
+        .sample-data table {
+            min-width: 100%;
+        }
+
+        .sample-data td {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .null-value {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        /* Overview */
+        .overview-description {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .table-list {
+            list-style: none;
+        }
+
+        .table-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-list a {
+            color: #4299e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .table-list a:hover {
+            text-decoration: underline;
+        }
+
+        .table-list .row-count {
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .table-list .owner {
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Nexus Cloud</h1>
+                <p>DataFlow Data Dictionary</p>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Overview</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#overview" onclick="showSection('overview')" class="active">Overview</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Entities</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#accounts" onclick="showSection('accounts')"><span class="table-icon">E</span>accounts</a></li>
+                    <li><a href="#contacts" onclick="showSection('contacts')"><span class="table-icon">E</span>contacts</a></li>
+                    <li><a href="#opportunities" onclick="showSection('opportunities')"><span class="table-icon">E</span>opportunities</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main">
+            <!-- Overview Section -->
+            <section id="overview" class="model-section active">
+                <div class="page-header">
+                    <h1>DataFlow Data Dictionary</h1>
+                    <p class="description">Nexus Cloud enterprise CRM platform</p>
+                </div>
+
+                <p class="overview-description">
+                    This data dictionary documents the entities in Nexus Cloud's DataFlow CRM system.
+                    It uses a relational structure with three entities to track customer accounts, contacts, and sales pipeline.
+                </p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Entities</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">33</div>
+                        <div class="stat-label">Accounts</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Opportunities</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Entities</div>
+                    <div class="card-body">
+                        <ul class="table-list">
+                            <li>
+                                <div>
+                                    <a href="#accounts" onclick="showSection('accounts')">accounts</a>
+                                    <span class="owner">Sales</span>
+                                </div>
+                                <span class="row-count">33 records</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="#contacts" onclick="showSection('contacts')">contacts</a>
+                                    <span class="owner">Sales</span>
+                                </div>
+                                <span class="row-count">57 records</span>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="#opportunities" onclick="showSection('opportunities')">opportunities</a>
+                                    <span class="owner">Sales</span>
+                                </div>
+                                <span class="row-count">40 records</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accounts -->
+            <section id="accounts" class="model-section">
+                <div class="page-header">
+                    <div class="breadcrumb"><a href="#overview" onclick="showSection('overview')">Overview</a> / Entities</div>
+                    <h1>accounts</h1>
+                    <p class="description">Customer and prospect records. Each account represents a company-level relationship.</p>
+                    <span class="entity-owner"><strong>Owner:</strong> Sales</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">33</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Attributes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Attributes</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-name">id<span class="badge badge-pk">PK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Unique identifier (e.g., "df-a1")</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Company name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">parent_id<span class="badge badge-fk">FK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td><span class="badge-optional">Optional</span></td>
+                                    <td class="col-description">Links subsidiary to parent account. Null for top-level accounts.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">industry</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Industry classification</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">annual_revenue</td>
+                                    <td><span class="col-type">Currency</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Company annual revenue in USD</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">employees</td>
+                                    <td><span class="col-type">Number</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Employee count</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">address</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Primary address</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">status</td>
+                                    <td><span class="col-type">Picklist</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">
+                                        Account status
+                                        <span class="valid-values">Values: <code>customer</code> <code>prospect</code></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">contract_value</td>
+                                    <td><span class="col-type">Currency</span></td>
+                                    <td><span class="badge-optional">Optional</span></td>
+                                    <td class="col-description">Annual contract value (ARR) in USD. Null for prospects.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">contract_start</td>
+                                    <td><span class="col-type">Date</span></td>
+                                    <td><span class="badge-optional">Optional</span></td>
+                                    <td class="col-description">Contract start date (YYYY-MM-DD). Null for prospects.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">contract_end</td>
+                                    <td><span class="col-type">Date</span></td>
+                                    <td><span class="badge-optional">Optional</span></td>
+                                    <td class="col-description">Contract end date (YYYY-MM-DD). Null for prospects.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Relationships</div>
+                    <div class="card-body">
+                        <div class="relationship">
+                            <span class="col-name">parent_id</span>
+                            <span class="relationship-arrow">&larr;</span>
+                            <a href="#accounts" onclick="showSection('accounts')" class="relationship-table">accounts.id</a>
+                            <span class="relationship-type">self-referential (parent-child)</span>
+                        </div>
+                        <div class="relationship">
+                            <span class="col-name">id</span>
+                            <span class="relationship-arrow">&rarr;</span>
+                            <a href="#contacts" onclick="showSection('contacts')" class="relationship-table">contacts.account_id</a>
+                            <span class="relationship-type">one-to-many</span>
+                        </div>
+                        <div class="relationship">
+                            <span class="col-name">id</span>
+                            <span class="relationship-arrow">&rarr;</span>
+                            <a href="#opportunities" onclick="showSection('opportunities')" class="relationship-table">opportunities.account_id</a>
+                            <span class="relationship-type">one-to-many</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Sample Records</div>
+                    <div class="card-body sample-data">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>name</th>
+                                    <th>parent_id</th>
+                                    <th>industry</th>
+                                    <th>annual_revenue</th>
+                                    <th>employees</th>
+                                    <th>status</th>
+                                    <th>contract_value</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>df-a1</td>
+                                    <td>Apex Industries</td>
+                                    <td><span class="null-value">NULL</span></td>
+                                    <td>Manufacturing</td>
+                                    <td>$50,000,000</td>
+                                    <td>500</td>
+                                    <td>customer</td>
+                                    <td>$500,000</td>
+                                </tr>
+                                <tr>
+                                    <td>df-a2</td>
+                                    <td>Apex Industries - West Division</td>
+                                    <td>df-a1</td>
+                                    <td>Manufacturing</td>
+                                    <td>$15,000,000</td>
+                                    <td>150</td>
+                                    <td>customer</td>
+                                    <td>$200,000</td>
+                                </tr>
+                                <tr>
+                                    <td>df-a3</td>
+                                    <td>Beacon Health Systems</td>
+                                    <td><span class="null-value">NULL</span></td>
+                                    <td>Healthcare</td>
+                                    <td>$200,000,000</td>
+                                    <td>2000</td>
+                                    <td>customer</td>
+                                    <td>$1,000,000</td>
+                                </tr>
+                                <tr>
+                                    <td>df-a4</td>
+                                    <td>Coastal Logistics</td>
+                                    <td><span class="null-value">NULL</span></td>
+                                    <td>Transportation</td>
+                                    <td>$75,000,000</td>
+                                    <td>300</td>
+                                    <td>prospect</td>
+                                    <td><span class="null-value">NULL</span></td>
+                                </tr>
+                                <tr>
+                                    <td>df-a5</td>
+                                    <td>Dynamo Tech</td>
+                                    <td><span class="null-value">NULL</span></td>
+                                    <td>Technology</td>
+                                    <td>$30,000,000</td>
+                                    <td>200</td>
+                                    <td>customer</td>
+                                    <td>$350,000</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Notes</div>
+                    <div class="card-body">
+                        <p style="color: #4a5568; font-size: 0.9rem;">
+                            Accounts have status "customer" or "prospect". Prospects have no contract fields
+                            (<code>contract_value</code>, <code>contract_start</code>, <code>contract_end</code> are all null).
+                            The <code>contract_value</code> represents annual recurring revenue (ARR) for that specific account.
+                            Parent/subsidiary relationships are tracked via <code>parent_id</code>.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contacts -->
+            <section id="contacts" class="model-section">
+                <div class="page-header">
+                    <div class="breadcrumb"><a href="#overview" onclick="showSection('overview')">Overview</a> / Entities</div>
+                    <h1>contacts</h1>
+                    <p class="description">People associated with accounts. Each contact belongs to exactly one account. Accounts typically have 1-3 contacts.</p>
+                    <span class="entity-owner"><strong>Owner:</strong> Sales</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">57</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Attributes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Attributes</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-name">id<span class="badge badge-pk">PK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Unique identifier (e.g., "df-c1")</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">account_id<span class="badge badge-fk">FK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Reference to the account this contact belongs to</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">first_name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Contact first name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">last_name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Contact last name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">title</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Job title</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">email</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Email address</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">phone</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Phone number</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Relationships</div>
+                    <div class="card-body">
+                        <div class="relationship">
+                            <span class="col-name">account_id</span>
+                            <span class="relationship-arrow">&larr;</span>
+                            <a href="#accounts" onclick="showSection('accounts')" class="relationship-table">accounts.id</a>
+                            <span class="relationship-type">many-to-one</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Sample Records</div>
+                    <div class="card-body sample-data">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>account_id</th>
+                                    <th>first_name</th>
+                                    <th>last_name</th>
+                                    <th>title</th>
+                                    <th>email</th>
+                                    <th>phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>df-c1</td>
+                                    <td>df-a1</td>
+                                    <td>Margaret</td>
+                                    <td>Chen</td>
+                                    <td>VP of Operations</td>
+                                    <td>mchen@apexind.com</td>
+                                    <td>312-555-1001</td>
+                                </tr>
+                                <tr>
+                                    <td>df-c2</td>
+                                    <td>df-a1</td>
+                                    <td>Robert</td>
+                                    <td>Williams</td>
+                                    <td>IT Director</td>
+                                    <td>rwilliams@apexind.com</td>
+                                    <td>312-555-1002</td>
+                                </tr>
+                                <tr>
+                                    <td>df-c3</td>
+                                    <td>df-a2</td>
+                                    <td>Lisa</td>
+                                    <td>Park</td>
+                                    <td>Regional Manager</td>
+                                    <td>lpark@apexind.com</td>
+                                    <td>213-555-2001</td>
+                                </tr>
+                                <tr>
+                                    <td>df-c4</td>
+                                    <td>df-a3</td>
+                                    <td>Dr. James</td>
+                                    <td>Morrison</td>
+                                    <td>CIO</td>
+                                    <td>jmorrison@beaconhealth.org</td>
+                                    <td>617-555-3001</td>
+                                </tr>
+                                <tr>
+                                    <td>df-c5</td>
+                                    <td>df-a3</td>
+                                    <td>Sarah</td>
+                                    <td>Kim</td>
+                                    <td>IT Manager</td>
+                                    <td>skim@beaconhealth.org</td>
+                                    <td>617-555-3002</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Opportunities -->
+            <section id="opportunities" class="model-section">
+                <div class="page-header">
+                    <div class="breadcrumb"><a href="#overview" onclick="showSection('overview')">Overview</a> / Entities</div>
+                    <h1>opportunities</h1>
+                    <p class="description">Sales pipeline tracking. Each opportunity represents a potential or completed deal linked to one account.</p>
+                    <span class="entity-owner"><strong>Owner:</strong> Sales</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">7</div>
+                        <div class="stat-label">Attributes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Attributes</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-name">id<span class="badge badge-pk">PK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Unique identifier (e.g., "df-o1")</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">account_id<span class="badge badge-fk">FK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Reference to the account this opportunity belongs to</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Opportunity name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">amount</td>
+                                    <td><span class="col-type">Currency</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Deal value in USD</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">stage</td>
+                                    <td><span class="col-type">Picklist</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">
+                                        Sales pipeline stage
+                                        <span class="valid-values">Values: <code>discovery</code> <code>proposal</code> <code>negotiation</code> <code>closed_won</code> <code>closed_lost</code></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">close_date</td>
+                                    <td><span class="col-type">Date</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Expected or actual close date (YYYY-MM-DD)</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">product</td>
+                                    <td><span class="col-type">Picklist</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">
+                                        Product offering
+                                        <span class="valid-values">Values: <code>DataFlow Enterprise</code> <code>DataFlow Standard</code> <code>DataFlow Analytics</code></span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Relationships</div>
+                    <div class="card-body">
+                        <div class="relationship">
+                            <span class="col-name">account_id</span>
+                            <span class="relationship-arrow">&larr;</span>
+                            <a href="#accounts" onclick="showSection('accounts')" class="relationship-table">accounts.id</a>
+                            <span class="relationship-type">many-to-one</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Sample Records</div>
+                    <div class="card-body sample-data">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>account_id</th>
+                                    <th>name</th>
+                                    <th>amount</th>
+                                    <th>stage</th>
+                                    <th>close_date</th>
+                                    <th>product</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>df-o1</td>
+                                    <td>df-a1</td>
+                                    <td>Apex Enterprise Expansion</td>
+                                    <td>$450,000</td>
+                                    <td>closed_won</td>
+                                    <td>2024-01-10</td>
+                                    <td>DataFlow Enterprise</td>
+                                </tr>
+                                <tr>
+                                    <td>df-o2</td>
+                                    <td>df-a1</td>
+                                    <td>Apex Analytics Add-on</td>
+                                    <td>$120,000</td>
+                                    <td>negotiation</td>
+                                    <td>2026-03-15</td>
+                                    <td>DataFlow Analytics</td>
+                                </tr>
+                                <tr>
+                                    <td>df-o3</td>
+                                    <td>df-a3</td>
+                                    <td>Beacon Initial Deal</td>
+                                    <td>$900,000</td>
+                                    <td>closed_won</td>
+                                    <td>2023-08-15</td>
+                                    <td>DataFlow Enterprise</td>
+                                </tr>
+                                <tr>
+                                    <td>df-o4</td>
+                                    <td>df-a3</td>
+                                    <td>Beacon Renewal 2025</td>
+                                    <td>$1,050,000</td>
+                                    <td>proposal</td>
+                                    <td>2025-07-01</td>
+                                    <td>DataFlow Enterprise</td>
+                                </tr>
+                                <tr>
+                                    <td>df-o5</td>
+                                    <td>df-a4</td>
+                                    <td>Coastal Logistics Discovery</td>
+                                    <td>$275,000</td>
+                                    <td>discovery</td>
+                                    <td>2026-06-30</td>
+                                    <td>DataFlow Standard</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Notes</div>
+                    <div class="card-body">
+                        <p style="color: #4a5568; font-size: 0.9rem;">
+                            Stage values track deals through the sales pipeline. <code>closed_won</code> and
+                            <code>closed_lost</code> are terminal stages. The <code>amount</code> field represents
+                            the total deal value, not annual recurring revenue.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.model-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav highlighting
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`a[href="#${sectionId}"]`).classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Handle direct URL access with hash
+        if (window.location.hash) {
+            const sectionId = window.location.hash.substring(1);
+            showSection(sectionId);
+        }
+    </script>
+</body>
+</html>

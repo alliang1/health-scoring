@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Search - Nexus Customer Health{% endblock %}
+
+{% block content %}
+<div class="search-box mb-5">
+    <h2 class="text-center mb-4">Customer Search</h2>
+    <form method="GET" action="{{ url_for('search') }}">
+        <div class="input-group input-group-lg">
+            <input type="text" name="q" class="form-control" placeholder="Search by company name..."
+                   value="{{ query }}" autofocus>
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+</div>
+
+{% if query %}
+<h4>Results for "{{ query }}"</h4>
+
+{% if results %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Company</th>
+            <th>Industry</th>
+            <th class="text-end">ARR</th>
+            <th class="text-center">Score</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for account, health in results %}
+        <tr onclick="window.location='{{ url_for('customer_detail', account_id=account.id) }}'" style="cursor: pointer;">
+            <td>
+                <strong>{{ account.name }}</strong>
+                {% if account.parent_id %}
+                <br><small class="text-muted">Subsidiary</small>
+                {% endif %}
+            </td>
+            <td>{{ account.industry }}</td>
+            <td class="text-end">
+                {% if account.contract_value %}
+                ${{ "{:,.0f}".format(account.contract_value) }}
+                {% else %}
+                -
+                {% endif %}
+            </td>
+            <td class="text-center">
+                {% if health %}
+                    <strong class="score-{{ health.category | replace('_', '-') }}">{{ health.score }}</strong>
+                {% else %}
+                    <span class="text-muted">-</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if health %}
+                    {% if health.category == 'critical' %}
+                    <span class="badge badge-critical">Critical</span>
+                    {% elif health.category == 'at_risk' %}
+                    <span class="badge badge-at-risk">At Risk</span>
+                    {% else %}
+                    <span class="badge badge-healthy">Healthy</span>
+                    {% endif %}
+                {% elif account.status == 'prospect' %}
+                    <span class="badge bg-secondary">Prospect</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">
+    No customers found matching "{{ query }}"
+</div>
+{% endif %}
+{% endif %}
+{% endblock %}

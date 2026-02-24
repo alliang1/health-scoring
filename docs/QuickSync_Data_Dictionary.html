@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Cloud - QuickSync Data Dictionary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 0;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            background: #1a202c;
+            border-bottom: 1px solid #4a5568;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .sidebar-header p {
+            font-size: 0.75rem;
+            color: #a0aec0;
+            margin-top: 0.25rem;
+        }
+
+        .sidebar-section {
+            padding: 1rem 0;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #718096;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav a {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: #e2e8f0;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+
+        .sidebar-nav a:hover {
+            background: #4a5568;
+            border-left-color: #38a169;
+        }
+
+        .sidebar-nav a.active {
+            background: #4a5568;
+            border-left-color: #38a169;
+        }
+
+        .table-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            background: #38a169;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+            vertical-align: middle;
+            text-align: center;
+            font-size: 0.7rem;
+            line-height: 18px;
+            color: #fff;
+        }
+
+        /* Main content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem 3rem;
+            max-width: 1000px;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+            color: #1a202c;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-header .description {
+            color: #718096;
+            font-size: 1rem;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: #718096;
+            margin-bottom: 0.5rem;
+        }
+
+        .breadcrumb a {
+            color: #38a169;
+            text-decoration: none;
+        }
+
+        .model-section {
+            display: none;
+        }
+
+        .model-section.active {
+            display: block;
+        }
+
+        /* Cards */
+        .card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+            color: #2d3748;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .col-name {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #2d3748;
+        }
+
+        .col-type {
+            font-size: 0.8rem;
+            color: #718096;
+            background: #edf2f7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            white-space: nowrap;
+        }
+
+        .col-description {
+            color: #4a5568;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+        }
+
+        .badge-pk {
+            background: #c6f6d5;
+            color: #276749;
+        }
+
+        .badge-fk {
+            background: #bee3f8;
+            color: #2b6cb0;
+        }
+
+        .badge-optional {
+            background: #fefcbf;
+            color: #975a16;
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border-radius: 3px;
+        }
+
+        .valid-values {
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        .valid-values code {
+            background: #edf2f7;
+            padding: 0.1rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            margin-right: 0.25rem;
+            color: #4a5568;
+        }
+
+        .entity-owner {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #718096;
+            margin-top: 0.25rem;
+        }
+
+        .entity-owner strong {
+            color: #4a5568;
+        }
+
+        /* Relationships */
+        .relationship {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .relationship:last-child {
+            border-bottom: none;
+        }
+
+        .relationship-arrow {
+            color: #a0aec0;
+            margin: 0 0.75rem;
+        }
+
+        .relationship-table {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            color: #38a169;
+            text-decoration: none;
+        }
+
+        .relationship-table:hover {
+            text-decoration: underline;
+        }
+
+        .relationship-type {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-left: auto;
+        }
+
+        /* Sample records */
+        .sample-data {
+            overflow-x: auto;
+        }
+
+        .sample-data table {
+            min-width: 100%;
+        }
+
+        .sample-data td {
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+
+        .null-value {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        /* Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 1rem 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #718096;
+        }
+
+        /* Overview */
+        .overview-description {
+            font-size: 1rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .table-list {
+            list-style: none;
+        }
+
+        .table-list li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .table-list a {
+            color: #38a169;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .table-list a:hover {
+            text-decoration: underline;
+        }
+
+        .table-list .row-count {
+            color: #718096;
+            font-size: 0.85rem;
+        }
+
+        .table-list .owner {
+            color: #a0aec0;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+        }
+
+        /* Plan tiers reference table */
+        .plan-tiers-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .plan-tiers-table th,
+        .plan-tiers-table td {
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .plan-tiers-table th {
+            background: #f0fff4;
+            font-weight: 600;
+            color: #276749;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Nexus Cloud</h1>
+                <p>QuickSync Data Dictionary</p>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Overview</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#overview" onclick="showSection('overview')" class="active">Overview</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Entities</div>
+                <ul class="sidebar-nav">
+                    <li><a href="#companies" onclick="showSection('companies')"><span class="table-icon">E</span>companies</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main">
+            <!-- Overview Section -->
+            <section id="overview" class="model-section active">
+                <div class="page-header">
+                    <h1>QuickSync Data Dictionary</h1>
+                    <p class="description">Nexus Cloud self-serve SMB product</p>
+                </div>
+
+                <p class="overview-description">
+                    This data dictionary documents the entities in QuickSync, Nexus Cloud's self-serve SMB product acquired last year.
+                    QuickSync stores all customer data in a single flat table. There is no account hierarchy, no separate contacts table, and no opportunity tracking.
+                </p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">1</div>
+                        <div class="stat-label">Entity</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">Subscription Plans</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Entities</div>
+                    <div class="card-body">
+                        <ul class="table-list">
+                            <li>
+                                <div>
+                                    <a href="#companies" onclick="showSection('companies')">companies</a>
+                                    <span class="owner">Product</span>
+                                </div>
+                                <span class="row-count">40 records</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Companies -->
+            <section id="companies" class="model-section">
+                <div class="page-header">
+                    <div class="breadcrumb"><a href="#overview" onclick="showSection('overview')">Overview</a> / Entities</div>
+                    <h1>companies</h1>
+                    <p class="description">Self-serve SMB customer records. Each company has one contact on file and a subscription plan.</p>
+                    <span class="entity-owner"><strong>Owner:</strong> Product</span>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value">40</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">11</div>
+                        <div class="stat-label">Attributes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Attributes</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Attribute</th>
+                                    <th>Type</th>
+                                    <th>Required</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="col-name">id<span class="badge badge-pk">PK</span></td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Unique identifier (e.g., "qs-1")</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">company_name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Company name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">contact_name</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Primary contact full name</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">contact_email</td>
+                                    <td><span class="col-type">Text</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Primary contact email address</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">plan</td>
+                                    <td><span class="col-type">Picklist</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">
+                                        Subscription tier
+                                        <span class="valid-values">Values: <code>starter</code> <code>professional</code> <code>business</code></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">mrr</td>
+                                    <td><span class="col-type">Currency</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Monthly recurring revenue in USD. This is the monthly rate regardless of billing_cycle.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">billing_cycle</td>
+                                    <td><span class="col-type">Picklist</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">
+                                        Billing frequency
+                                        <span class="valid-values">Values: <code>monthly</code> <code>annual</code></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">signup_date</td>
+                                    <td><span class="col-type">Date</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Account creation date (YYYY-MM-DD)</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">renewal_date</td>
+                                    <td><span class="col-type">Date</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Next renewal date (YYYY-MM-DD). May be in the past if the subscription has lapsed.</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">usage_gb</td>
+                                    <td><span class="col-type">Number</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Current storage usage in GB</td>
+                                </tr>
+                                <tr>
+                                    <td class="col-name">users</td>
+                                    <td><span class="col-type">Number</span></td>
+                                    <td>Yes</td>
+                                    <td class="col-description">Number of active users</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Relationships</div>
+                    <div class="card-body">
+                        <p style="color: #718096; font-size: 0.9rem;">
+                            No relationships. QuickSync uses a flat data structure with no foreign keys, no account hierarchy, no separate contacts table, and no opportunity tracking.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Sample Records</div>
+                    <div class="card-body sample-data">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>company_name</th>
+                                    <th>contact_name</th>
+                                    <th>contact_email</th>
+                                    <th>plan</th>
+                                    <th>mrr</th>
+                                    <th>billing_cycle</th>
+                                    <th>signup_date</th>
+                                    <th>renewal_date</th>
+                                    <th>usage_gb</th>
+                                    <th>users</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>qs-1</td>
+                                    <td>Bright Ideas Marketing</td>
+                                    <td>Jessica Adams</td>
+                                    <td>jadams@brightideas.co</td>
+                                    <td>professional</td>
+                                    <td>$899</td>
+                                    <td>monthly</td>
+                                    <td>2024-08-15</td>
+                                    <td>2026-02-15</td>
+                                    <td>45</td>
+                                    <td>8</td>
+                                </tr>
+                                <tr>
+                                    <td>qs-2</td>
+                                    <td>Cascade Coffee Roasters</td>
+                                    <td>Mike Tanaka</td>
+                                    <td>mike@cascadecoffee.com</td>
+                                    <td>starter</td>
+                                    <td>$299</td>
+                                    <td>monthly</td>
+                                    <td>2025-01-03</td>
+                                    <td>2026-01-03</td>
+                                    <td>12</td>
+                                    <td>3</td>
+                                </tr>
+                                <tr>
+                                    <td>qs-3</td>
+                                    <td>Dynamo Tech</td>
+                                    <td>Kevin Patel</td>
+                                    <td>kpatel@dynamotech.io</td>
+                                    <td>professional</td>
+                                    <td>$1,499</td>
+                                    <td>annual</td>
+                                    <td>2023-06-01</td>
+                                    <td>2026-06-01</td>
+                                    <td>120</td>
+                                    <td>25</td>
+                                </tr>
+                                <tr>
+                                    <td>qs-4</td>
+                                    <td>Echo Design Studio</td>
+                                    <td>Mia Torres</td>
+                                    <td>mia@echodesign.com</td>
+                                    <td>starter</td>
+                                    <td>$299</td>
+                                    <td>monthly</td>
+                                    <td>2025-03-20</td>
+                                    <td>2026-03-20</td>
+                                    <td>8</td>
+                                    <td>2</td>
+                                </tr>
+                                <tr>
+                                    <td>qs-5</td>
+                                    <td>Frontier Labs</td>
+                                    <td>Derek Wong</td>
+                                    <td>dwong@frontierlabs.co</td>
+                                    <td>business</td>
+                                    <td>$2,499</td>
+                                    <td>annual</td>
+                                    <td>2024-01-15</td>
+                                    <td>2026-01-15</td>
+                                    <td>340</td>
+                                    <td>55</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Plan Tiers Reference</div>
+                    <div class="card-body">
+                        <table class="plan-tiers-table">
+                            <thead>
+                                <tr>
+                                    <th>Plan</th>
+                                    <th>MRR</th>
+                                    <th>Typical Usage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>starter</code></td>
+                                    <td>$299</td>
+                                    <td>1-5 users, up to 15 GB</td>
+                                </tr>
+                                <tr>
+                                    <td><code>professional</code></td>
+                                    <td>$899-$1,499</td>
+                                    <td>5-30 users, up to 150 GB</td>
+                                </tr>
+                                <tr>
+                                    <td><code>business</code></td>
+                                    <td>$2,499</td>
+                                    <td>20-100 users, up to 500 GB</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Notes</div>
+                    <div class="card-body">
+                        <p style="color: #4a5568; font-size: 0.9rem;">
+                            Flat structure: no account hierarchy, no separate contacts table, no opportunity tracking.
+                            Each company has exactly one contact on file. The <code>mrr</code> field stores the monthly rate
+                            regardless of <code>billing_cycle</code>. Annual billing is <code>mrr * 12</code> per year.
+                            The <code>renewal_date</code> may be in the past if the subscription has lapsed.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.model-section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Update nav highlighting
+            document.querySelectorAll('.sidebar-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`a[href="#${sectionId}"]`).classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Handle direct URL access with hash
+        if (window.location.hash) {
+            const sectionId = window.location.hash.substring(1);
+            showSection(sectionId);
+        }
+    </script>
+</body>
+</html>

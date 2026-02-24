@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+
+{% block title %}{{ account.name }} - Nexus Customer Health{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('customers') }}">Customers</a></li>
+        <li class="breadcrumb-item active">{{ account.name }}</li>
+    </ol>
+</nav>
+
+<div class="row mb-3">
+    <div class="col-md-6">
+        <h2>{{ account.name }}</h2>
+        {% if parent %}
+        <p class="text-muted">
+            Subsidiary of <a href="{{ url_for('customer_detail', account_id=parent.id) }}">{{ parent.name }}</a>
+        </p>
+        {% endif %}
+    </div>
+    <div class="col-md-3 text-end">
+        <h3>${{ "{:,.0f}".format(arr) }}</h3>
+        <p class="text-muted">ARR</p>
+    </div>
+    <div class="col-md-3 text-end">
+        {% if health %}
+            {% if health.category == 'critical' %}
+            <h3><span class="badge badge-critical">{{ health.score }} Critical</span></h3>
+            {% elif health.category == 'at_risk' %}
+            <h3><span class="badge badge-at-risk">{{ health.score }} At Risk</span></h3>
+            {% else %}
+            <h3><span class="badge badge-healthy">{{ health.score }} Healthy</span></h3>
+            {% endif %}
+        {% elif account.status == 'prospect' %}
+            <h3><span class="badge bg-secondary">Prospect</span></h3>
+        {% endif %}
+    </div>
+</div>
+
+{% if health and health.signals %}
+<div class="card mb-4">
+    <div class="card-header">Health Signals</div>
+    <ul class="list-group list-group-flush">
+        {% for signal in health.signals %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ signal.description }}
+            {% if signal.severity == 'critical' %}
+            <span class="badge bg-danger">Critical</span>
+            {% elif signal.severity == 'warning' %}
+            <span class="badge bg-warning text-dark">Warning</span>
+            {% else %}
+            <span class="badge bg-success">Positive</span>
+            {% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-md-6">
+        <h5>Company Information</h5>
+        <table class="table table-sm">
+            <tr><td class="text-muted">Industry</td><td>{{ account.industry }}</td></tr>
+            <tr><td class="text-muted">Employees</td><td>{{ "{:,}".format(account.employees) }}</td></tr>
+            <tr><td class="text-muted">Annual Revenue</td><td>${{ "{:,.0f}".format(account.annual_revenue) }}</td></tr>
+            <tr><td class="text-muted">Address</td><td>{{ account.address }}</td></tr>
+        </table>
+    </div>
+    <div class="col-md-6">
+        {% if account.contract_start %}
+        <h5>Contract</h5>
+        <table class="table table-sm">
+            <tr><td class="text-muted">Value</td><td>${{ "{:,.0f}".format(account.contract_value) }}</td></tr>
+            <tr><td class="text-muted">Start Date</td><td>{{ account.contract_start }}</td></tr>
+            <tr><td class="text-muted">End Date</td><td>{{ account.contract_end }}</td></tr>
+        </table>
+        {% endif %}
+    </div>
+</div>
+
+{% if children %}
+<hr>
+<h5>Subsidiaries</h5>
+<ul class="list-group mb-4">
+    {% for child in children %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <a href="{{ url_for('customer_detail', account_id=child.id) }}">{{ child.name }}</a>
+        {% if child.contract_value %}
+        <span class="badge bg-primary rounded-pill">${{ "{:,.0f}".format(child.contract_value) }}</span>
+        {% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<hr>
+
+<h5>Contacts ({{ contacts|length }})</h5>
+{% if contacts %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Title</th>
+            <th>Email</th>
+            <th>Phone</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for contact in contacts %}
+        <tr>
+            <td>{{ contact.first_name }} {{ contact.last_name }}</td>
+            <td>{{ contact.title }}</td>
+            <td><a href="mailto:{{ contact.email }}">{{ contact.email }}</a></td>
+            <td>{{ contact.phone }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No contacts on file.</p>
+{% endif %}
+
+<hr>
+
+<h5>Opportunities ({{ opportunities|length }})</h5>
+{% if opportunities %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Opportunity</th>
+            <th>Product</th>
+            <th>Amount</th>
+            <th>Stage</th>
+            <th>Close Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for opp in opportunities %}
+        <tr>
+            <td>{{ opp.name }}</td>
+            <td>{{ opp.product }}</td>
+            <td>${{ "{:,.0f}".format(opp.amount) }}</td>
+            <td>
+                {% if opp.stage == 'closed_won' %}
+                <span class="badge bg-success">Won</span>
+                {% elif opp.stage == 'closed_lost' %}
+                <span class="badge bg-danger">Lost</span>
+                {% elif opp.stage == 'negotiation' %}
+                <span class="badge bg-warning text-dark">Negotiation</span>
+                {% elif opp.stage == 'proposal' %}
+                <span class="badge bg-info text-dark">Proposal</span>
+                {% else %}
+                <span class="badge bg-secondary">Discovery</span>
+                {% endif %}
+            </td>
+            <td>{{ opp.close_date }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No opportunities on file.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,362 @@
+[
+  {
+    "id": "df-o1",
+    "account_id": "df-a1",
+    "name": "Apex Enterprise Expansion",
+    "amount": 450000,
+    "stage": "closed_won",
+    "close_date": "2024-01-10",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o2",
+    "account_id": "df-a1",
+    "name": "Apex Analytics Add-on",
+    "amount": 120000,
+    "stage": "negotiation",
+    "close_date": "2026-03-15",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o3",
+    "account_id": "df-a3",
+    "name": "Beacon Initial Deal",
+    "amount": 900000,
+    "stage": "closed_won",
+    "close_date": "2023-08-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o4",
+    "account_id": "df-a3",
+    "name": "Beacon Renewal 2025",
+    "amount": 1050000,
+    "stage": "proposal",
+    "close_date": "2025-07-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o5",
+    "account_id": "df-a4",
+    "name": "Coastal Pilot Program",
+    "amount": 180000,
+    "stage": "discovery",
+    "close_date": "2026-06-01",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o6",
+    "account_id": "df-a5",
+    "name": "Dynamo Initial Contract",
+    "amount": 350000,
+    "stage": "closed_won",
+    "close_date": "2024-02-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o7",
+    "account_id": "df-a6",
+    "name": "Evergreen Full Platform",
+    "amount": 750000,
+    "stage": "closed_won",
+    "close_date": "2024-06-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o8",
+    "account_id": "df-a7",
+    "name": "Falcon Enterprise Assessment",
+    "amount": 1200000,
+    "stage": "discovery",
+    "close_date": "2026-09-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o9",
+    "account_id": "df-a8",
+    "name": "GlobalTech Enterprise License",
+    "amount": 900000,
+    "stage": "closed_won",
+    "close_date": "2025-05-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o10",
+    "account_id": "df-a8",
+    "name": "GlobalTech Analytics Expansion",
+    "amount": 250000,
+    "stage": "negotiation",
+    "close_date": "2026-06-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o11",
+    "account_id": "df-a10",
+    "name": "Meridian Enterprise Deployment",
+    "amount": 1400000,
+    "stage": "closed_won",
+    "close_date": "2024-05-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o12",
+    "account_id": "df-a10",
+    "name": "Meridian Analytics Add-on",
+    "amount": 200000,
+    "stage": "closed_lost",
+    "close_date": "2025-09-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o13",
+    "account_id": "df-a11",
+    "name": "Pinnacle Retail Platform",
+    "amount": 600000,
+    "stage": "closed_won",
+    "close_date": "2024-12-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o14",
+    "account_id": "df-a11",
+    "name": "Pinnacle Loyalty Analytics",
+    "amount": 175000,
+    "stage": "proposal",
+    "close_date": "2026-05-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o15",
+    "account_id": "df-a13",
+    "name": "Summit Enterprise Contract",
+    "amount": 1100000,
+    "stage": "closed_won",
+    "close_date": "2024-03-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o16",
+    "account_id": "df-a13",
+    "name": "Summit Contract Renewal",
+    "amount": 1250000,
+    "stage": "negotiation",
+    "close_date": "2026-03-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o17",
+    "account_id": "df-a14",
+    "name": "Redwood Media Platform",
+    "amount": 550000,
+    "stage": "closed_won",
+    "close_date": "2025-08-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o18",
+    "account_id": "df-a15",
+    "name": "Sterling Manufacturing Suite",
+    "amount": 450000,
+    "stage": "closed_won",
+    "close_date": "2023-12-10",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o19",
+    "account_id": "df-a16",
+    "name": "PNWCU Data Platform",
+    "amount": 400000,
+    "stage": "closed_won",
+    "close_date": "2025-02-15",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o20",
+    "account_id": "df-a17",
+    "name": "Vanguard Project Management",
+    "amount": 750000,
+    "stage": "closed_won",
+    "close_date": "2024-07-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o21",
+    "account_id": "df-a17",
+    "name": "Vanguard Renewal",
+    "amount": 825000,
+    "stage": "closed_lost",
+    "close_date": "2025-07-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o22",
+    "account_id": "df-a18",
+    "name": "Atlas Logistics Platform",
+    "amount": 600000,
+    "stage": "closed_won",
+    "close_date": "2025-09-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o23",
+    "account_id": "df-a19",
+    "name": "Brightstar Learning Management",
+    "amount": 300000,
+    "stage": "closed_won",
+    "close_date": "2025-01-05",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o24",
+    "account_id": "df-a19",
+    "name": "Brightstar Platform Expansion",
+    "amount": 400000,
+    "stage": "discovery",
+    "close_date": "2026-06-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o25",
+    "account_id": "df-a20",
+    "name": "Catalina Research Platform",
+    "amount": 1200000,
+    "stage": "closed_won",
+    "close_date": "2025-06-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o26",
+    "account_id": "df-a20",
+    "name": "Catalina Data Analytics Module",
+    "amount": 350000,
+    "stage": "proposal",
+    "close_date": "2026-08-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o27",
+    "account_id": "df-a21",
+    "name": "Nordic Fleet Management Assessment",
+    "amount": 800000,
+    "stage": "discovery",
+    "close_date": "2026-09-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o28",
+    "account_id": "df-a23",
+    "name": "Horizon Enterprise Platform",
+    "amount": 850000,
+    "stage": "closed_won",
+    "close_date": "2025-04-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o29",
+    "account_id": "df-a23",
+    "name": "Horizon Analytics Expansion",
+    "amount": 200000,
+    "stage": "proposal",
+    "close_date": "2026-08-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o30",
+    "account_id": "df-a25",
+    "name": "Ironclad Security Platform",
+    "amount": 400000,
+    "stage": "closed_won",
+    "close_date": "2024-10-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o31",
+    "account_id": "df-a25",
+    "name": "Ironclad Platform Renewal",
+    "amount": 425000,
+    "stage": "negotiation",
+    "close_date": "2026-04-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o32",
+    "account_id": "df-a26",
+    "name": "Juniper Telecom Suite",
+    "amount": 700000,
+    "stage": "closed_won",
+    "close_date": "2025-07-15",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o33",
+    "account_id": "df-a27",
+    "name": "Lakeview Consulting Platform",
+    "amount": 300000,
+    "stage": "closed_won",
+    "close_date": "2024-06-15",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o34",
+    "account_id": "df-a28",
+    "name": "Monarch Insurance Deployment",
+    "amount": 950000,
+    "stage": "closed_won",
+    "close_date": "2025-03-20",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o35",
+    "account_id": "df-a28",
+    "name": "Monarch Claims Analytics",
+    "amount": 180000,
+    "stage": "discovery",
+    "close_date": "2026-10-01",
+    "product": "DataFlow Analytics"
+  },
+  {
+    "id": "df-o36",
+    "account_id": "df-a31",
+    "name": "Presidio Financial Platform",
+    "amount": 550000,
+    "stage": "closed_won",
+    "close_date": "2025-02-28",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o37",
+    "account_id": "df-a32",
+    "name": "Sequoia Operations Platform",
+    "amount": 500000,
+    "stage": "closed_won",
+    "close_date": "2025-02-15",
+    "product": "DataFlow Standard"
+  },
+  {
+    "id": "df-o38",
+    "account_id": "df-a30",
+    "name": "Orion Defense Assessment",
+    "amount": 1200000,
+    "stage": "discovery",
+    "close_date": "2026-12-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o39",
+    "account_id": "df-a33",
+    "name": "Trident Maritime Evaluation",
+    "amount": 350000,
+    "stage": "discovery",
+    "close_date": "2026-11-01",
+    "product": "DataFlow Enterprise"
+  },
+  {
+    "id": "df-o40",
+    "account_id": "df-a13",
+    "name": "Summit Analytics Add-on",
+    "amount": 150000,
+    "stage": "closed_won",
+    "close_date": "2025-08-01",
+    "product": "DataFlow Analytics"
+  }
+]
