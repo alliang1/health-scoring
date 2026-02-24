@@ -1,3 +1,22 @@
+# Github Shortcuts
+
+- **NEVER WORK ON MAIN**
+- Step 0: Pulling what was pushed on main (only if main was updated)
+  ```
+  git checkout main
+  git pull origin main
+  ```
+- Step 1: Switch to own branch. This is where you will be working on (Note: checkout == switching tabs)
+
+  ```git checkout -b [ur branch here] ```
+- Step 2: Once done and want to push (Note: MAKE SURE UR ON UR BRANCH; use "git branch" to check which branch ur on)
+  ```
+  git add [enter blank file]
+  git commit -m "Add message here"
+  git push
+  ```
+
+
 # Nexus Customer Health
 
 Customer health monitoring for the Nexus CRM platform. Currently configured for DataFlow (enterprise) data only.
