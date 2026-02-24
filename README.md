@@ -2,15 +2,15 @@
 
 - **NEVER WORK ON MAIN**
 - Step 0:
--            "git checkout main
-           git pull origin main"
+-            git checkout main
+             git pull origin main
   -This will pull what was pushed in main
 - Step 1: "git checkout -b [ur branch here]"
     - This is where you will be working on (Note: checkout == switching tabs)
 - Step 2: Once done and want to push (Note: MAKE SURE UR ON UR BRANCH; use "git branch" to check which branch ur on)
--        "git add [enter blank file]
--         git commit -m "Add message here"
--         git push"
+-            git add [enter blank file]
+-            git commit -m "Add message here"
+-            git push
 
 
 # Nexus Customer Health
