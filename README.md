@@ -1,20 +1,42 @@
-# Github Shortcuts
+## Features
 
-- **NEVER WORK ON MAIN**
-- Step 0: Pulling what was pushed on main (only if main was updated)
-  ```
-  git checkout main
-  git pull origin main
-  ```
-- Step 1: Switch to own branch. This is where you will be working on (Note: checkout == switching tabs)
+- **Customer List** - All accounts sorted by health score (worst first), prospects at bottom. Sortable A-Z/Z-A by clicking on the triangle next to "Customer"
+- **Health Scoring** - Automated scores based on contract status and sales pipeline
+- **Alerts** - Dashboard of at-risk and critical customers with ARR impact
+- **Customer Detail** - Full profile with contacts, opportunities, and health signals, and source system breakdown
+- **Search** - Find customers by company name across both systems
+- **Possible Duplicate Flagging** - Customers with unconfirmed name matches across systems are flagged for manual review
 
-  ```git checkout -b [ur branch here] ```
-- Step 2: Once done and want to push (Note: MAKE SURE UR ON UR BRANCH; use "git branch" to check which branch ur on)
-  ```
-  git add [enter blank file]
-  git commit -m "Add message here"
-  git push
-  ```
+## New Changes
+In the original app, it only scored DataFlow cutsomers. QuickSync data was loaded but it was not connected. This means that the customers that only existed in QuickSync had no health score. So we implemented a unified data model that bridges them so that that both system datas are all under one single "Customer" entity. 
+
+### Customer fields: 
+- **customer_id** - unified id (Uses DataFlow id if available and otherwise uses QuickSync id)
+- **customer_name** - from DataFlow "name" or QuickSync "company_name" 
+- **status** - "customer" or "prospect"
+- **primary_contact_name** - normalized from whichever source
+- **primary_contact_email** - normalized from whichever source
+- **ARR** - normalized annual recurring revenue
+- **contract_start** - normalized contract dates
+- **contract_end** - normalized contract dates
+- **dataflow** - links to source records
+- **quicksync** - links to source records
+- **possible_duplicate** - duplicate flag fields
+- **possible_duplicate_match** - duplicate flag fields
+
+### Customer Matching 
+- Matches based on the confidence scale in report 
+
+### Alert Threshold 
+If customer's score is below 80 it appears in the Alerts Page & prospects are not scored
+
+## How to Verify
+1. Both sources are connected: Go to Customers and each row shows whether it's from DataFlow or QuickSync in the "Source" section. 
+2. For health scores the expired or expiring contracts show critical or at risk. 
+3. Possible duplicates are flagged and it can be easily checked if alphabetized
+4. Alerts is on the alerts page and shows customers from both systems 
+5. Sort: the triangle next to "Customers" should default to gray. Click to toggle to A-Z, click again for Z-A, one more time to go back to its original sort. 
+6. To search just type in the company and it should appear with the badge it is associated to.
 
 
 # Nexus Customer Health
@@ -30,13 +52,6 @@ python3 app.py
 
 Open http://localhost:5000 in your browser.
 
-## Features
-
-- **Customer List** - All accounts sorted by health score (worst first), prospects at bottom
-- **Health Scoring** - Automated scores based on contract status and sales pipeline
-- **Alerts** - Dashboard of at-risk and critical customers with ARR impact
-- **Customer Detail** - Full profile with contacts, opportunities, and health signals
-- **Search** - Find customers by company name
 
 ## Health Scoring
 
@@ -85,8 +100,3 @@ Opportunity
   close_date
   account_id -> Account
 ```
-
-## Known Issues
-
-- QuickSync data exists in the database but is not connected to the application
-- Some customers appear in both data sources with inconsistent naming
